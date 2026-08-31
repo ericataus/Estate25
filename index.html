@@ -1,0 +1,760 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Plantation House - Guest Menu & Ordering Station</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;700&family=Playfair+Display:ital,wght@0,600;0,700;1,400&family=Plus+Jakarta+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            /* Vintage Colonial / Malayan Plantation Palette */
+            --bg-parchment: #F5EFE6;
+            --bg-card: #EFEAD8;
+            --text-charcoal: #2C2C2C;
+            --text-muted: #5C5245;
+            --accent-terracotta: #C85A32;
+            --accent-cinnamon: #4A2E1B;
+            --accent-jungle: #2D4A3E;
+            --accent-gold: #C5A059;
+            --border-vintage: #D5CABC;
+            --shadow-subtle: rgba(74, 46, 27, 0.08);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            background-color: var(--bg-parchment);
+            background-image: 
+                radial-gradient(circle at 50% 50%, transparent 60%, rgba(74, 46, 27, 0.07) 100%),
+                url("data:image/svg+xml,%3Csvg width='100' height='100' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100' height='100' filter='url(%23noise)' opacity='0.03'/%3E%3C/svg%3E");
+            color: var(--text-charcoal);
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            min-height: 100vh;
+            padding-bottom: 40px;
+        }
+
+        /* Header Styling */
+        header {
+            background-color: var(--accent-cinnamon);
+            color: var(--bg-parchment);
+            padding: 2rem 1rem 1.5rem 1rem;
+            text-align: center;
+            border-bottom: 3px double var(--accent-gold);
+            position: relative;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+        }
+
+        header::after {
+            content: "";
+            display: block;
+            position: absolute;
+            bottom: -8px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 60px;
+            height: 3px;
+            background-color: var(--accent-terracotta);
+        }
+
+        .brand-subtitle {
+            font-family: 'Cinzel', serif;
+            font-size: 0.75rem;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            color: var(--accent-gold);
+            margin-bottom: 0.25rem;
+        }
+
+        header h1 {
+            font-family: 'Playfair Display', serif;
+            font-size: 2rem;
+            font-weight: 700;
+            letter-spacing: 0.5px;
+            color: var(--bg-parchment);
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.3);
+        }
+
+        /* Navigation Tabs (Three Views) */
+        .nav-container {
+            display: flex;
+            justify-content: center;
+            background-color: #3D2516;
+            border-bottom: 1px solid var(--border-vintage);
+        }
+
+        .tab-btn {
+            flex: 1;
+            max-width: 200px;
+            padding: 0.9rem 0.5rem;
+            background: none;
+            border: none;
+            color: #C5B5A5;
+            font-family: 'Cinzel', serif;
+            font-size: 0.8rem;
+            font-weight: 700;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-align: center;
+        }
+
+        .tab-btn.active {
+            background-color: var(--bg-parchment);
+            color: var(--accent-cinnamon);
+            border-top: 3px solid var(--accent-terracotta);
+        }
+
+        /* Layout Container */
+        .container {
+            max-width: 680px;
+            margin: 2rem auto;
+            padding: 0 1rem;
+        }
+
+        .view-section {
+            display: none;
+        }
+
+        .view-section.active {
+            display: block;
+        }
+
+        /* Card Container */
+        .card {
+            background-color: var(--bg-card);
+            border: 1px solid var(--border-vintage);
+            border-radius: 4px;
+            padding: 1.75rem;
+            margin-bottom: 1.5rem;
+            box-shadow: 0 6px 16px var(--shadow-subtle);
+            position: relative;
+        }
+
+        /* Ornate Decorative Corners */
+        .card::before {
+            content: "✦";
+            position: absolute;
+            top: 6px;
+            left: 8px;
+            color: var(--accent-gold);
+            font-size: 0.7rem;
+            opacity: 0.7;
+        }
+
+        .card::after {
+            content: "✦";
+            position: absolute;
+            top: 6px;
+            right: 8px;
+            color: var(--accent-gold);
+            font-size: 0.7rem;
+            opacity: 0.7;
+        }
+
+        /* Food Menu View Styling */
+        .menu-title {
+            font-family: 'Playfair Display', serif;
+            color: var(--accent-cinnamon);
+            text-align: center;
+            font-size: 1.8rem;
+            margin-bottom: 0.25rem;
+        }
+
+        .menu-tagline {
+            text-align: center;
+            font-family: 'Playfair Display', serif;
+            font-style: italic;
+            color: var(--text-muted);
+            margin-bottom: 1.75rem;
+            font-size: 0.95rem;
+        }
+
+        .menu-category-title {
+            font-family: 'Cinzel', serif;
+            font-size: 1rem;
+            color: var(--accent-terracotta);
+            border-bottom: 1px solid var(--border-vintage);
+            padding-bottom: 0.4rem;
+            margin: 1.5rem 0 1rem 0;
+            letter-spacing: 1.5px;
+            text-transform: uppercase;
+        }
+
+        .menu-item {
+            margin-bottom: 1.25rem;
+        }
+
+        .menu-item-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: baseline;
+        }
+
+        .menu-item-name {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: var(--accent-cinnamon);
+        }
+
+        .menu-item-desc {
+            font-size: 0.88rem;
+            color: var(--text-muted);
+            margin-top: 0.25rem;
+            line-height: 1.4;
+        }
+
+        /* Form Controls */
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        label {
+            display: block;
+            font-family: 'Cinzel', serif;
+            font-size: 0.8rem;
+            font-weight: 700;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            margin-bottom: 0.5rem;
+            color: var(--accent-cinnamon);
+        }
+
+        input[type="text"], select, textarea {
+            width: 100%;
+            padding: 0.85rem;
+            background-color: var(--bg-parchment);
+            border: 1px solid var(--border-vintage);
+            border-radius: 3px;
+            color: var(--text-charcoal);
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            font-size: 0.95rem;
+            outline: none;
+            transition: border-color 0.3s;
+        }
+
+        input[type="text"]:focus, select:focus, textarea:focus {
+            border-color: var(--accent-terracotta);
+            box-shadow: 0 0 0 2px rgba(200, 90, 50, 0.15);
+        }
+
+        /* Dynamic Preview Box */
+        .preview-box {
+            text-align: center;
+            background-color: var(--bg-parchment);
+            border: 1px solid var(--border-vintage);
+            border-radius: 4px;
+            padding: 1.25rem;
+            margin-bottom: 1.5rem;
+            box-shadow: inset 0 0 8px rgba(0,0,0,0.03);
+        }
+
+        .preview-box img {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+            border-radius: 2px;
+            border: 1px solid var(--border-vintage);
+            margin-bottom: 0.75rem;
+            filter: sepia(0.15) contrast(1.02);
+        }
+
+        .preview-box p {
+            font-family: 'Playfair Display', serif;
+            font-style: italic;
+            font-size: 0.95rem;
+            color: var(--text-muted);
+            line-height: 1.4;
+        }
+
+        /* Customization Chips */
+        .chip-group {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+        }
+
+        .chip {
+            padding: 0.6rem 1rem;
+            border: 1px solid var(--border-vintage);
+            background-color: var(--bg-parchment);
+            color: var(--text-muted);
+            border-radius: 2px;
+            cursor: pointer;
+            font-size: 0.85rem;
+            font-weight: 500;
+            user-select: none;
+            transition: all 0.2s ease;
+        }
+
+        .chip:hover {
+            border-color: var(--accent-terracotta);
+            color: var(--accent-cinnamon);
+        }
+
+        .chip.selected {
+            background-color: var(--accent-jungle);
+            color: var(--bg-parchment);
+            border-color: var(--accent-jungle);
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        /* Submit Button */
+        .submit-btn {
+            width: 100%;
+            padding: 1.1rem;
+            background-color: var(--accent-terracotta);
+            color: var(--bg-parchment);
+            font-family: 'Cinzel', serif;
+            font-size: 0.95rem;
+            font-weight: 700;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            border: none;
+            border-radius: 2px;
+            cursor: pointer;
+            transition: background 0.3s ease, transform 0.1s;
+            box-shadow: 0 4px 8px rgba(200, 90, 50, 0.25);
+        }
+
+        .submit-btn:hover {
+            background-color: #B24E2A;
+        }
+
+        .submit-btn:active {
+            transform: translateY(1px);
+        }
+
+        /* Confirmation Alert */
+        .alert {
+            display: none;
+            padding: 1rem 1.25rem;
+            background-color: var(--accent-jungle);
+            color: var(--bg-parchment);
+            border-left: 4px solid var(--accent-gold);
+            border-radius: 2px;
+            margin-bottom: 1.5rem;
+            font-family: 'Playfair Display', serif;
+            font-size: 1rem;
+            text-align: center;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+        }
+
+        /* Kitchen Dashboard Styling */
+        .dashboard-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 1px dashed var(--border-vintage);
+        }
+
+        .dashboard-header h2 {
+            font-family: 'Playfair Display', serif;
+            color: var(--accent-cinnamon);
+            font-size: 1.6rem;
+        }
+
+        .clear-btn {
+            background-color: transparent;
+            color: var(--accent-terracotta);
+            border: 1px solid var(--accent-terracotta);
+            padding: 0.4rem 0.8rem;
+            font-family: 'Cinzel', serif;
+            font-size: 0.75rem;
+            font-weight: 700;
+            letter-spacing: 1px;
+            border-radius: 2px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .clear-btn:hover {
+            background-color: var(--accent-terracotta);
+            color: var(--bg-parchment);
+        }
+
+        .order-card {
+            border-left: 4px solid var(--accent-terracotta);
+            position: relative;
+        }
+
+        .order-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 0.5rem;
+        }
+
+        .order-card h3 {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.3rem;
+            color: var(--accent-cinnamon);
+        }
+
+        .order-timestamp {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            font-family: 'Plus Jakarta Sans', sans-serif;
+        }
+
+        .order-details {
+            font-size: 0.95rem;
+            margin: 0.8rem 0;
+            line-height: 1.6;
+            color: var(--text-charcoal);
+        }
+
+        .order-details strong {
+            font-family: 'Cinzel', serif;
+            font-size: 0.75rem;
+            color: var(--accent-cinnamon);
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
+        }
+
+        .done-btn {
+            background-color: var(--accent-jungle);
+            color: var(--bg-parchment);
+            border: none;
+            padding: 0.5rem 1rem;
+            font-family: 'Cinzel', serif;
+            font-size: 0.75rem;
+            font-weight: 700;
+            letter-spacing: 1px;
+            border-radius: 2px;
+            cursor: pointer;
+            transition: background 0.2s;
+            margin-top: 0.5rem;
+        }
+
+        .done-btn:hover {
+            background-color: #1F342B;
+        }
+
+        .empty-queue {
+            text-align: center;
+            color: var(--text-muted);
+            padding: 3rem 0;
+            font-family: 'Playfair Display', serif;
+            font-style: italic;
+            font-size: 1.1rem;
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="brand-subtitle">The Heritage Lounge</div>
+        <h1>Plantation House Station</h1>
+    </header>
+
+    <div class="nav-container">
+        <button class="tab-btn active" onclick="switchView('menuView', this)">Food Menu</button>
+        <button class="tab-btn" onclick="switchView('guestView', this)">Order Drink</button>
+        <button class="tab-btn" onclick="switchView('kitchenView', this)">Kitchen Queue</button>
+    </div>
+
+    <div class="container">
+        
+        <section id="menuView" class="view-section active">
+            <div class="card">
+                <h2 class="menu-title">Evening Refreshments</h2>
+                <p class="menu-tagline">Inspired by heritage tropical gatherings and classic hospitality</p>
+
+                <div class="menu-category-title">Savory Small Plates</div>
+                
+                <div class="menu-item">
+                    <div class="menu-item-header">
+                        <span class="menu-item-name">Nyonya Chicken Satay Skewers</span>
+                    </div>
+                    <div class="menu-item-desc">Chargrilled chicken skewers marinated in lemongrass and turmeric, served with rich peanut sauce.</div>
+                </div>
+
+                <div class="menu-item">
+                    <div class="menu-item-header">
+                        <span class="menu-item-name">Heritage Curry Puffs</span>
+                    </div>
+                    <div class="menu-item-desc">Hand-rolled flaky pastry filled with spiced potato, minced chicken, and aromatics.</div>
+                </div>
+
+                <div class="menu-item">
+                    <div class="menu-item-header">
+                        <span class="menu-item-name">Roasted Plantation Peanuts</span>
+                    </div>
+                    <div class="menu-item-desc">Slow-roasted peanuts tossed with kaffir lime leaves, sea salt, and crispy garlic chips.</div>
+                </div>
+
+                <div class="menu-category-title">Sweets & Delicacies</div>
+
+                <div class="menu-item">
+                    <div class="menu-item-header">
+                        <span class="menu-item-name">Pandan & Coconut Kuih Lapis</span>
+                    </div>
+                    <div class="menu-item-desc">Traditional steamed layered rice cake infused with fresh pandan juice and coconut cream.</div>
+                </div>
+
+                <div class="menu-item">
+                    <div class="menu-item-header">
+                        <span class="menu-item-name">Warm Scones with Heritage Jam</span>
+                    </div>
+                    <div class="menu-item-desc">Freshly baked butter scones served with clotted cream and handmade tropical papaya-pineapple jam.</div>
+                </div>
+            </div>
+        </section>
+
+        <section id="guestView" class="view-section">
+            <div id="confirmationAlert" class="alert">
+                ✦ Your order has been placed. The kitchen will prepare it shortly. ✦
+            </div>
+
+            <form id="orderForm" onsubmit="handleFormSubmit(event)">
+                <div class="card">
+                    <div class="form-group">
+                        <label for="guestName">Guest Name *</label>
+                        <input type="text" id="guestName" required placeholder="e.g. Eleanor Vance">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="drinkSelect">Select Beverage *</label>
+                        <select id="drinkSelect" onchange="updatePreview()" required>
+                            <optgroup label="Teas (Coles Australia Range)">
+                                <option value="Twinings English Breakfast">Twinings English Breakfast</option>
+                                <option value="Twinings Earl Grey">Twinings Earl Grey</option>
+                                <option value="Twinings Pure Green">Twinings Pure Green</option>
+                                <option value="Twinings Jasmine Green">Twinings Jasmine Green</option>
+                                <option value="Twinings Peppermint">Twinings Peppermint</option>
+                                <option value="Twinings Camomile">Twinings Camomile</option>
+                                <option value="Nerada Australian Black">Nerada Australian Black</option>
+                                <option value="Lipton Quality Black">Lipton Quality Black</option>
+                                <option value="Higher Living Organic Chai">Higher Living Organic Chai</option>
+                            </optgroup>
+                            <optgroup label="Coffees">
+                                <option value="Espresso/Long Black">Espresso / Long Black</option>
+                                <option value="Flat White">Flat White</option>
+                                <option value="Latte">Latte</option>
+                                <option value="Cappuccino">Cappuccino</option>
+                                <option value="Moccona Classic Instant">Moccona Classic Instant</option>
+                                <option value="Nescafé Blend 43 Instant">Nescafé Blend 43 Instant</option>
+                            </optgroup>
+                            <optgroup label="Other Delights">
+                                <option value="Hot Chocolate">Hot Chocolate</option>
+                                <option value="Warm Milk & Honey">Warm Milk & Honey</option>
+                            </optgroup>
+                        </select>
+                    </div>
+
+                    <div class="preview-box">
+                        <img id="previewImage" src="" alt="Beverage Preview">
+                        <p id="previewDescription">Select a beverage to view its heritage notes.</p>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Milk Type</label>
+                        <div class="chip-group" id="milkOptions">
+                            <div class="chip selected" onclick="selectChip('milkOptions', this)">Full Cream</div>
+                            <div class="chip" onclick="selectChip('milkOptions', this)">Skim</div>
+                            <div class="chip" onclick="selectChip('milkOptions', this)">Oat</div>
+                            <div class="chip" onclick="selectChip('milkOptions', this)">Almond</div>
+                            <div class="chip" onclick="selectChip('milkOptions', this)">No Milk (Black)</div>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Sweetener</label>
+                        <div class="chip-group" id="sweetenerOptions">
+                            <div class="chip selected" onclick="selectChip('sweetenerOptions', this)">No Sugar</div>
+                            <div class="chip" onclick="selectChip('sweetenerOptions', this)">1 Sugar</div>
+                            <div class="chip" onclick="selectChip('sweetenerOptions', this)">2 Sugars</div>
+                            <div class="chip" onclick="selectChip('sweetenerOptions', this)">Honey</div>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="specialNotes">Special Requests</label>
+                        <textarea id="specialNotes" rows="2" placeholder="e.g., extra hot, leave tea bag in, subtle froth"></textarea>
+                    </div>
+
+                    <button type="submit" class="submit-btn">Send Order to Kitchen</button>
+                </div>
+            </form>
+        </section>
+
+        <section id="kitchenView" class="view-section">
+            <div class="dashboard-header">
+                <h2>Active Orders</h2>
+                <button class="clear-btn" onclick="clearAllOrders()">Reset Queue</button>
+            </div>
+            <div id="queueList">
+                </div>
+        </section>
+
+    </div>
+
+    <script>
+        // Beverage Metadata & Photo Mapping
+        const drinkData = {
+            "Twinings English Breakfast": { image: "https://images.unsplash.com/photo-1576092768241-dec231879fc3?w=600&q=80", desc: "A full-bodied, robust tea brewed to perfection. Ideal with a dash of milk." },
+            "Twinings Earl Grey": { image: "https://images.unsplash.com/photo-1597481499750-3e6b22637e12?w=600&q=80", desc: "A fragrant black tea blended with citrusy notes of bergamot." },
+            "Twinings Pure Green": { image: "https://images.unsplash.com/photo-1627435601361-ec25f5b1d0e5?w=600&q=80", desc: "Delicate, light green tea offering a crisp and refreshing finish." },
+            "Twinings Jasmine Green": { image: "https://images.unsplash.com/photo-1627435601361-ec25f5b1d0e5?w=600&q=80", desc: "Elegantly scented with real jasmine blossoms for an aromatic cup." },
+            "Twinings Peppermint": { image: "https://images.unsplash.com/photo-1576092768241-dec231879fc3?w=600&q=80", desc: "Naturally caffeine-free with a cool, invigorating mint taste." },
+            "Twinings Camomile": { image: "https://images.unsplash.com/photo-1576092768241-dec231879fc3?w=600&q=80", desc: "Gentle herbal tea with delicate floral notes, ideal for relaxing." },
+            "Nerada Australian Black": { image: "https://images.unsplash.com/photo-1576092768241-dec231879fc3?w=600&q=80", desc: "Pesticide-free black tea grown in the lush Atherton Tablelands." },
+            "Lipton Quality Black": { image: "https://images.unsplash.com/photo-1576092768241-dec231879fc3?w=600&q=80", desc: "A smooth, classic black tea crafted for everyday comfort." },
+            "Higher Living Organic Chai": { image: "https://images.unsplash.com/photo-1561336313-0bd5e0b27ec8?w=600&q=80", desc: "Warming organic spices blended with rich black tea leaves." },
+            "Espresso/Long Black": { image: "https://images.unsplash.com/photo-1510591509098-f4fdc6d0ff04?w=600&q=80", desc: "Bold, intense espresso poured over hot water for a deep flavor." },
+            "Flat White": { image: "https://images.unsplash.com/photo-1577968897966-3d4325b36b61?w=600&q=80", desc: "Smooth espresso topped with velvety steamed milk." },
+            "Latte": { image: "https://images.unsplash.com/photo-1534778101976-62847782c213?w=600&q=80", desc: "Rich espresso combined with silky hot milk and light microfoam." },
+            "Cappuccino": { image: "https://images.unsplash.com/photo-1534778101976-62847782c213?w=600&q=80", desc: "Espresso layered with thick foam and dusted with cocoa." },
+            "Moccona Classic Instant": { image: "https://images.unsplash.com/photo-1514432324607-a09d9b4aefdd?w=600&q=80", desc: "Freeze-dried coffee with a rounded, well-balanced aroma." },
+            "Nescafé Blend 43 Instant": { image: "https://images.unsplash.com/photo-1514432324607-a09d9b4aefdd?w=600&q=80", desc: "A bold Australian classic with a signature rich roast flavor." },
+            "Hot Chocolate": { image: "https://images.unsplash.com/photo-1542990253-0d0f5be5f0ed?w=600&q=80", desc: "Creamy, decadent cocoa stirred with hot milk." },
+            "Warm Milk & Honey": { image: "https://images.unsplash.com/photo-1550583724-b2692b85b150?w=600&q=80", desc: "Soothing warm milk lightly sweetened with natural honey." }
+        };
+
+        // View Navigation Switcher
+        function switchView(targetSectionId, btnElement) {
+            document.querySelectorAll('.view-section').forEach(el => el.classList.remove('active'));
+            document.querySelectorAll('.tab-btn').forEach(el => el.classList.remove('active'));
+
+            document.getElementById(targetSectionId).classList.add('active');
+            if (btnElement) {
+                btnElement.classList.add('active');
+            }
+
+            if (targetSectionId === 'kitchenView') {
+                renderQueue();
+            }
+        }
+
+        // Chip selection logic
+        function selectChip(groupId, element) {
+            const group = document.getElementById(groupId);
+            group.querySelectorAll('.chip').forEach(c => c.classList.remove('selected'));
+            element.classList.add('selected');
+        }
+
+        // Dynamic Image & Description preview on selection update
+        function updatePreview() {
+            const selected = document.getElementById('drinkSelect').value;
+            const previewImage = document.getElementById('previewImage');
+            const previewDesc = document.getElementById('previewDescription');
+
+            if (drinkData[selected]) {
+                previewImage.src = drinkData[selected].image;
+                previewDesc.textContent = drinkData[selected].desc;
+            }
+        }
+
+        // Handle Order Submission
+        function handleFormSubmit(event) {
+            event.preventDefault();
+
+            const name = document.getElementById('guestName').value.trim();
+            const drink = document.getElementById('drinkSelect').value;
+            const milk = document.querySelector('#milkOptions .chip.selected').textContent;
+            const sweetener = document.querySelector('#sweetenerOptions .chip.selected').textContent;
+            const notes = document.getElementById('specialNotes').value.trim();
+
+            const order = {
+                id: Date.now(),
+                name: name,
+                drink: drink,
+                milk: milk,
+                sweetener: sweetener,
+                notes: notes,
+                timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+            };
+
+            saveOrder(order);
+
+            // Reset Form Fields
+            document.getElementById('guestName').value = '';
+            document.getElementById('specialNotes').value = '';
+            
+            // Show brief alert
+            const alert = document.getElementById('confirmationAlert');
+            alert.style.display = 'block';
+            setTimeout(() => { alert.style.display = 'none'; }, 3500);
+        }
+
+        // LocalStorage Controls
+        function getOrders() {
+            return JSON.parse(localStorage.getItem('plantation_party_orders') || '[]');
+        }
+
+        function saveOrder(order) {
+            const orders = getOrders();
+            orders.push(order);
+            localStorage.setItem('plantation_party_orders', JSON.stringify(orders));
+        }
+
+        function markDone(orderId) {
+            let orders = getOrders();
+            orders = orders.filter(o => o.id !== orderId);
+            localStorage.setItem('plantation_party_orders', JSON.stringify(orders));
+            renderQueue();
+        }
+
+        function clearAllOrders() {
+            if (confirm('Are you sure you wish to clear all pending orders?')) {
+                localStorage.removeItem('plantation_party_orders');
+                renderQueue();
+            }
+        }
+
+        // Render Kitchen Queue Cards
+        function renderQueue() {
+            const queueList = document.getElementById('queueList');
+            const orders = getOrders();
+
+            if (orders.length === 0) {
+                queueList.innerHTML = '<div class="empty-queue">No active orders in queue. Relax and enjoy the atmosphere!</div>';
+                return;
+            }
+
+            queueList.innerHTML = orders.map(order => `
+                <div class="card order-card">
+                    <div class="order-header">
+                        <h3>${escapeHtml(order.name)}</h3>
+                        <span class="order-timestamp">${order.timestamp}</span>
+                    </div>
+                    <div class="order-details">
+                        <div><strong>Drink:</strong> ${escapeHtml(order.drink)}</div>
+                        <div><strong>Milk:</strong> ${escapeHtml(order.milk)}</div>
+                        <div><strong>Sweetener:</strong> ${escapeHtml(order.sweetener)}</div>
+                        ${order.notes ? `<div><strong>Notes:</strong> ${escapeHtml(order.notes)}</div>` : ''}
+                    </div>
+                    <button class="done-btn" onclick="markDone(${order.id})">Done ✓</button>
+                </div>
+            `).join('');
+        }
+
+        function escapeHtml(str) {
+            return str.replace(/[&<>"']/g, function(m) {
+                return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#039;' }[m];
+            });
+        }
+
+        // Real-time synchronization across browser tabs
+        window.addEventListener('storage', function(e) {
+            if (e.key === 'plantation_party_orders') {
+                renderQueue();
+            }
+        });
+
+        // Initialize preview on initial load
+        updatePreview();
+    </script>
+</body>
+</html>
